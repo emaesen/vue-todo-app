@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A Vue.js ToDo demo app",
   "author": "edward maesen",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
