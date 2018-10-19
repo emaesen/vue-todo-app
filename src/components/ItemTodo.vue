@@ -71,23 +71,33 @@
       </div>
     </div>
     <div
-      v-show="!isEditing &&todo.done"
+      v-show="isOpen"
+      class="ui bottom attached blue basic button"
+      @click="progressTodo(todo)"
+    >
+      Work on this task
+    </div>
+    <div
+      v-show="isInProgress"
+      class="ui bottom attached blue basic button"
+      @click="completeTodo(todo)"
+    >
+      Complete this task
+    </div>
+    <div
+      v-show="isCompleted"
       class="ui disabled bottom attached green basic button"
       disabled
     >
       Completed
     </div>
-    <div
-      v-show="!isEditing && !todo.done"
-      class="ui bottom attached brown basic button"
-      @click="completeTodo(todo)"
-    >
-      Complete this task
-    </div>
   </div>
 </template>
 
 <script type="text/javascript">
+  import app from '../App';
+  //const STATUS = app.constants.STATUS;
+
   export default {
     props: {
       index: {
@@ -103,17 +113,31 @@
             dateDue:"",
             title:"",
             project:"",
-            done:false
+            status:""
           }
         }
       }
     },
     data() {
       return {
-        isEditing: false,
+        isEditing: false
       };
     },
+    computed: {
+      isOpen: function() {
+        return !this.isEditing && this.todo.status === app.constants.STATUS.OPEN
+      },
+      isInProgress: function() {
+        return !this.isEditing && this.todo.status === app.constants.STATUS.PROGRESS
+      },
+      isCompleted: function() {
+        return !this.isEditing && this.todo.status === app.constants.STATUS.COMPLETE
+      }
+    },
     methods: {
+      progressTodo(todo) {
+        this.$emit('progress-todo', todo);
+      },
       completeTodo(todo) {
         this.$emit('complete-todo', todo);
       },

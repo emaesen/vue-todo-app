@@ -7,17 +7,25 @@
       @create-todo="createTodo"
       @create-todo-warning="createTodoWarning"
     />
-    <div class="ui two column centered grid">
+    <div class="ui three column centered grid">
       <div class="column">
-        <todo-list
+        <list-open-todos
           :todos="openTodos"
+          @delete-todo="deleteTodo"
+          @progress-todo="progressTodo"
+          @edit-todo="editTodo"
+        />
+      </div>
+      <div class="column">
+        <list-in-progress-todos
+          :todos="inProgressTodos"
           @delete-todo="deleteTodo"
           @complete-todo="completeTodo"
           @edit-todo="editTodo"
         />
       </div>
       <div class="column">
-        <completed-todo-list
+        <list-completed-todos
           :todos="completedTodos"
           @delete-todo="deleteTodo"
         />
@@ -31,18 +39,28 @@
 
 <script>
 import swalModal from 'sweetalert';
-import TodoList from './components/TodoList';
-import CompletedTodoList from './components/CompletedTodoList';
+import ListOpenTodos from './components/ListOpenTodos';
+import ListInProgressTodos from './components/ListInProgressTodos';
+import ListCompletedTodos from './components/ListCompletedTodos';
 import CreateTodo from './components/CreateTodo';
 import CreateDummyTodos from './components/CreateDummyTodos';
+const STATUS = {
+  OPEN: "open",
+  PROGRESS: "progress",
+  COMPLETE: "complete"
+};
 
 export default {
   name: 'App',
   components: {
-    TodoList,
-    CompletedTodoList,
+    ListOpenTodos,
+    ListInProgressTodos,
+    ListCompletedTodos,
     CreateTodo,
     CreateDummyTodos
+  },
+  constants: {
+    STATUS
   },
   data() {
     return {
@@ -52,18 +70,27 @@ export default {
   computed: {
     openTodos: function() {
       return this.todos
-        .filter(todo => {return todo.done === false});
+        .filter(todo => {return todo.status === STATUS.OPEN});
+    },
+    inProgressTodos: function() {
+      return this.todos
+        .filter(todo => {return todo.status === STATUS.PROGRESS});
     },
     completedTodos: function() {
       return this.todos
-        .filter(todo => {return todo.done === true})
+        .filter(todo => {return todo.status === STATUS.COMPLETE})
         .sort((a,b) => {return b.dateCompleted - a.dateCompleted});
     }
   },
   methods: {
-    createTodo(newTodo) {
-      this.todos.push(newTodo);
-      swalModal('Success!', 'To-Do ' + newTodo.title + ' has been created', 'success');
+    createTodo(todo) {
+      todo.status = STATUS.OPEN;
+      this.todos.push(todo);
+      swalModal('Success!', 'To-Do ' + todo.title + ' has been created', 'success');
+    },
+    progressTodo(todo) {
+      todo.status = STATUS.PROGRESS;
+      swalModal('Success!', 'To-Do ' + todo.title + ' is now in progress', 'success');
     },
     deleteTodo(todo) {
       swalModal({
@@ -87,10 +114,9 @@ export default {
         buttons: {cancel:true, ok:true}
       })
       .then((action) => {
-
         if (action === "ok") {
           todo.dateCompleted = Date.now();
-          todo.done = true;
+          todo.status = STATUS.COMPLETE;
           swalModal('Success!', 'To-Do "' + todo.title + '"  has been completed', 'success')
         }
       });

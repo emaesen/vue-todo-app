@@ -1,22 +1,22 @@
 <template>
   <div>
     <p class="tasks">Completed Tasks: {{ todos.length }}</p>
-    <todo-item
+    <item-todo
       v-for="(todo, index) in todos"
       :todo.sync="todo"
       :index.sync="index"
-      :key="todo.dateDeleted"
+      :key="todo.dateCreated"
       @delete-todo="deleteTodo"
     />
   </div>
 </template>
 
 <script type = "text/javascript" >
-import TodoItem from './TodoItem';
+import ItemTodo from './ItemTodo';
 
 export default {
   components: {
-    TodoItem,
+    ItemTodo,
   },
   props: {
     todos: {

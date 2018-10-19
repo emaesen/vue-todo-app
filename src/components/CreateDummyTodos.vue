@@ -58,9 +58,8 @@ export default {
         let cntr = ++this.dummyTodoCounter;
         this.$emit('create-todo', {
           dateCreated: Date.now(),
-          title: 'Todo ' + cntr,
-          project: 'Project ' + cntr,
-          done: false,
+          title: 'Todo title ' + cntr,
+          project: 'Short project description ' + cntr
         });
       }
     },

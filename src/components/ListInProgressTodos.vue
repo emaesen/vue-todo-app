@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p class="tasks">Open Tasks: {{ todos.length }}</p>
-    <todo-item
+    <p class="tasks">Tasks In Progress: {{ todos.length }}</p>
+    <item-todo
       v-for="(todo, index) in todos"
       :todo.sync="todo"
       :index.sync="index"
@@ -14,17 +14,17 @@
 </template>
 
 <script type = "text/javascript" >
-import TodoItem from './TodoItem';
+import ItemTodo from './ItemTodo';
 
 export default {
   components: {
-    TodoItem,
+    ItemTodo,
   },
   props: {
     todos: {
       type: Array,
       default: function() {
-        return [];
+        return []
       }
     }
   },

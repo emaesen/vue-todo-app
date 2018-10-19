@@ -4,7 +4,9 @@ This is a basic one-page ToDo demo app, written with [vue.js v2](https://vuejs.o
 
 This is just a visual web page demo, it doesn't store any entered data. Everything you enter will be lost upon reload...
 
-The page contains two columns: one for Open Tasks and one for Completed Tasks.
+v0.1: The page contains two columns: one for Open Tasks and one for Completed Tasks.
+
+V0.2: Refactored and added new status and column for In Progress Tasks
 
 
 ## Build Setup
