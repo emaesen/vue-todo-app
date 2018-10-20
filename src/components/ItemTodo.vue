@@ -8,6 +8,12 @@
       v-show="!isEditing"
       class="content"
     >
+      <div
+        v-show="todo.dateDue"
+        class="right aligned"
+      >
+        Due: {{ formattedDueDate }}
+      </div>
       <div class="header">
         <span class="meta">{{ index+1 }}.</span> {{ todo.title }}
       </div>
@@ -16,12 +22,6 @@
       </div>
       <div class="meta">
         {{ todo.note }}
-      </div>
-      <div
-        v-show="todo.dateDue"
-        class="extra meta"
-      >
-        Due: {{ formattedDueDate }}
       </div>
       <div class="right floated extra content ui mini basic icon buttons">
         <span
@@ -138,7 +138,13 @@
     },
     computed: {
       formattedDueDate: function() {
-        return this.todo.dateDue && this.todo.dateDue.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+        let dateFormat = {
+          //weekday:'short',
+          month:'short',
+          day:'numeric',
+          //year:'numeric'
+        }
+        return this.todo.dateDue && this.todo.dateDue.toLocaleDateString('en-US', dateFormat);
       },
       isPastDue: function() {
         return this.todo.dateDue && (this.todo.dateDue.getTime()) < (new Date().getTime());

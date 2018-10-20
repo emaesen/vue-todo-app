@@ -49,6 +49,7 @@ const STATUS = {
   PROGRESS: "progress",
   COMPLETE: "complete"
 };
+// although this config is a constant within the current implementation, it's defined as a variable so it can be used as such later.
 let config = {
   showSuccessModal: false,
   showConfirmModal: true
