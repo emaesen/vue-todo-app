@@ -1,8 +1,8 @@
 <template>
   <div
     :id="'todo-'+todo.dateCreated"
-    class="ui centered card"
     :class="dueClass"
+    class="ui centered card"
   >
     <div
       v-show="!isEditing"

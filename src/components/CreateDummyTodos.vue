@@ -38,7 +38,7 @@ export default {
         let due = new Date();
         due.setDate(due.getDate() + 1 + Math.floor(10*Math.random()));
         this.$emit('create-todo', {
-          dateCreated: Date.now(),
+          dateCreated: Date.now()+i*100,
           title: 'Todo title ' + cntr,
           project: 'Short project description ' + cntr,
           note: 'A note or comment ' + cntr + ' (' + due.toISOString() + ')',

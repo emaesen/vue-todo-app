@@ -49,6 +49,10 @@ const STATUS = {
   PROGRESS: "progress",
   COMPLETE: "complete"
 };
+let config = {
+  showSuccessModal: false,
+  showConfirmModal: true
+}
 
 export default {
   name: 'App',
@@ -91,11 +95,15 @@ export default {
     createTodo(todo) {
       todo.status = STATUS.OPEN;
       this.todos.push(todo);
-      swalModal('Success!', 'To-Do ' + todo.title + ' has been created', 'success');
+      if (config.showSuccessModal) {
+        swalModal('Success!', 'To-Do ' + todo.title + ' has been created', 'success');
+      }
     },
     progressTodo(todo) {
       todo.status = STATUS.PROGRESS;
-      swalModal('Success!', 'To-Do ' + todo.title + ' is now in progress', 'success');
+      if (config.showSuccessModal) {
+        swalModal('Success!', 'To-Do ' + todo.title + ' is now in progress', 'success');
+      }
     },
     deleteTodo(todo) {
       swalModal({
@@ -108,7 +116,9 @@ export default {
         if (doDelete) {
           const todoIndex = this.todos.indexOf(todo);
           this.todos.splice(todoIndex, 1);
-          swalModal('Deleted!', 'Your To-Do "' + todo.title + '" has been deleted', 'success');
+          if (config.showSuccessModal) {
+            swalModal('Deleted!', 'Your To-Do "' + todo.title + '" has been deleted', 'success');
+          }
         } else {
           //swalModal('Your To-Do has been restored.')
         }
@@ -122,12 +132,16 @@ export default {
         if (action === "ok") {
           todo.dateCompleted = Date.now();
           todo.status = STATUS.COMPLETE;
-          swalModal('Success!', 'To-Do "' + todo.title + '"  has been completed', 'success')
+          if (config.showSuccessModal) {
+            swalModal('Success!', 'To-Do "' + todo.title + '"  has been completed', 'success')
+          }
         }
       });
     },
     editTodo(todo) {
-      swalModal('Success!', 'To-Do "' + todo.title + '"  has been edited', 'success')
+      if (config.showSuccessModal) {
+        swalModal('Success!', 'To-Do "' + todo.title + '"  has been edited', 'success')
+      }
     },
     createTodoWarning(warning) {
       swalModal(warning.title, warning.text, 'warning');
