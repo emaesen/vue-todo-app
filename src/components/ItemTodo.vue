@@ -2,6 +2,7 @@
   <div
     :id="'todo-'+todo.dateCreated"
     class="ui centered card"
+    :class="dueClass"
   >
     <div
       v-show="!isEditing"
@@ -13,9 +14,18 @@
       <div class="content">
         {{ todo.project }}
       </div>
+      <div class="meta">
+        {{ todo.note }}
+      </div>
+      <div
+        v-show="todo.dateDue"
+        class="extra meta"
+      >
+        Due: {{ formattedDueDate }}
+      </div>
       <div class="right floated extra content ui mini basic icon buttons">
         <span
-          v-show="!todo.done"
+          v-show="!isCompleted"
           class="edit ui primary basic icon button"
           title="edit"
           @click="showForm()"
@@ -23,7 +33,7 @@
           <i class="edit icon"/> edit
         </span>
         <span
-          v-show="!todo.done"
+          v-show="!isCompleted"
           class="or"
         />
         <span
@@ -75,14 +85,14 @@
       class="ui bottom attached blue basic button"
       @click="progressTodo(todo)"
     >
-      Work on this task
+      Start this task &nbsp; <i class="play icon"/>
     </div>
     <div
       v-show="isInProgress"
       class="ui bottom attached blue basic button"
       @click="completeTodo(todo)"
     >
-      Complete this task
+      Complete this task &nbsp; <i class="stop icon"/>
     </div>
     <div
       v-show="isCompleted"
@@ -96,7 +106,8 @@
 
 <script type="text/javascript">
   import app from '../App';
-  //const STATUS = app.constants.STATUS;
+
+  const DAY = 1000 * 60 * 60 * 24;
 
   export default {
     props: {
@@ -109,10 +120,11 @@
         default: function() {
           return {
             dateCreated:"",
-            dateCompleted:"",
             dateDue:"",
+            dateCompleted:"",
             title:"",
             project:"",
+            note:"",
             status:""
           }
         }
@@ -120,18 +132,35 @@
     },
     data() {
       return {
-        isEditing: false
+        isEditing: false,
+        STATUS: app.constants.STATUS
       };
     },
     computed: {
+      formattedDueDate: function() {
+        return this.todo.dateDue && this.todo.dateDue.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+      },
+      isPastDue: function() {
+        return this.todo.dateDue && (this.todo.dateDue.getTime()) < (new Date().getTime());
+      },
+      isDueSoon: function() {
+        const window = DAY * 2;
+        return this.todo.dateDue && ((this.todo.dateDue.getTime()) - (new Date().getTime())) < window;
+      },
       isOpen: function() {
-        return !this.isEditing && this.todo.status === app.constants.STATUS.OPEN
+        return !this.isEditing && this.todo.status === this.STATUS.OPEN
       },
       isInProgress: function() {
-        return !this.isEditing && this.todo.status === app.constants.STATUS.PROGRESS
+        return !this.isEditing && this.todo.status === this.STATUS.PROGRESS
       },
       isCompleted: function() {
-        return !this.isEditing && this.todo.status === app.constants.STATUS.COMPLETE
+        return !this.isEditing && this.todo.status === this.STATUS.COMPLETE
+      },
+      dueClass: function() {
+        return this.isCompleted? 'complete'
+          : this.isPastDue? 'pastdue'
+          : this.isDueSoon? 'duesoon'
+          : 'notyetdue'
       }
     },
     methods: {
@@ -146,10 +175,7 @@
       },
       showForm() {
         this.isEditing = true;
-        this.origTodo = {
-          title: this.todo.title,
-          project: this.todo.project
-        }
+        this.origTodo = Object.assign({}, this.todo);
       },
       saveEdit() {
         this.isEditing = false;
@@ -161,8 +187,25 @@
       cancelEdit() {
         this.todo.title = this.origTodo.title;
         this.todo.project = this.origTodo.project;
+        this.todo.note = this.origTodo.note;
+        this.todo.dateDue = this.origTodo.dateDue;
         this.isEditing = false;
       }
     }
   };
 </script>
+
+<style>
+.notyetdue{
+  background-color: #2bff0410!important;
+}
+.duesoon{
+  background-color: #ff6a0020!important;
+}
+.pastdue{
+  background-color: #ff000010!important;
+}
+.complete{
+  background-color: #415ca710!important;
+}
+</style>

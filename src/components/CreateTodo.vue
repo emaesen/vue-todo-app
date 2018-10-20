@@ -16,15 +16,29 @@
           <div class="field">
             <label>Title</label>
             <input
-              v-model="titleText"
+              v-model="title"
               type="text"
             >
           </div>
           <div class="field">
-            <label>Project</label>
+            <label>Project Description</label>
             <input
-              v-model="projectText"
+              v-model="project"
               type="text"
+            >
+          </div>
+          <div class="field">
+            <label>Note / Comment</label>
+            <input
+              v-model="note"
+              type="text"
+            >
+          </div>
+          <div class="field">
+            <label>Date Due</label>
+            <input
+              v-model="dateDue"
+              type="date"
             >
           </div>
           <div class="ui two button attached buttons">
@@ -51,8 +65,10 @@
 export default {
   data() {
     return {
-      titleText: '',
-      projectText: '',
+      title: '',
+      project: '',
+      note: '',
+      dateDue: '',
       isCreating: false,
     };
   },
@@ -65,25 +81,27 @@ export default {
       this.clearTodoForm();
     },
     clearTodoForm() {
-      this.titleText = '';
-      this.projectText = '';
+      this.title = '';
+      this.project = '';
+      this.note = '';
+      this.dateDue = '';
       this.isCreating = false;
     },
     createTodo() {
-      if (this.titleText.length > 0 && this.projectText.length > 0) {
-        const title = this.titleText;
-        const project = this.projectText;
+      if (this.title.length > 0 && this.project.length > 0) {
         this.$emit('create-todo', {
           dateCreated: Date.now(),
-          title,
-          project,
+          title: this.title,
+          project: this.project,
+          note: this.note,
+          dateDue: this.dateDue? new Date(this.dateDue + "T00:00:00") : '',
           done: false,
         });
         this.clearTodoForm();
       } else {
-        let txt = (this.titleText.length === 0)? "Please provide a title." : "";
-        txt += (this.titleText.length === 0 && this.projectText.length === 0)? "\n" : "";
-        txt += this.projectText.length === 0? "Please provide a project description." : "";
+        let txt = (this.title.length === 0)? "Please provide a title." : "";
+        txt += (this.title.length === 0 && this.project.length === 0)? "\n" : "";
+        txt += this.project.length === 0? "Please provide a project description." : "";
         this.$emit('create-todo-warning', {
           title: 'Missing input',
           text: txt

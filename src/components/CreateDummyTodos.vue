@@ -33,33 +33,16 @@ export default {
   },
   methods: {
     createDummyTodos() {
-      /*
-      let that = this;
-      async function addTodo() {
-        let todos = that.todos;
-        function delay() {
-          return new Promise(x => {
-            setTimeout(() => {x();}, 100);
-          });
-        }
-        // add delay to ensure dateCreated is unique
-        await delay();
-        let cntr = ++that.dummyTodoCounter;
-        todos.push({
-          dateCreated: Date.now(),
-          title: 'Todo ' + cntr,
-          project: 'Project ' + cntr,
-          done: false,
-        });
-      }
-      */
       for (let i=0; i<this.nrOfDummyTodos; i++) {
-        //addTodo();
         let cntr = ++this.dummyTodoCounter;
+        let due = new Date();
+        due.setDate(due.getDate() + 1 + Math.floor(10*Math.random()));
         this.$emit('create-todo', {
           dateCreated: Date.now(),
           title: 'Todo title ' + cntr,
-          project: 'Short project description ' + cntr
+          project: 'Short project description ' + cntr,
+          note: 'A note or comment ' + cntr + ' (' + due.toISOString() + ')',
+          dateDue: due
         });
       }
     },

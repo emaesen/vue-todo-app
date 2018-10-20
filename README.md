@@ -8,6 +8,8 @@ v0.1: The page contains two columns: one for Open Tasks and one for Completed Ta
 
 V0.2: Refactored and added new status and column for In Progress Tasks
 
+v0.3: Added note and due date to ToDo item
+
 
 ## Build Setup
 
