@@ -77,13 +77,13 @@ export default {
       // order by due date (earliest due on top)
       return this.todos
         .filter(todo => {return todo.status === STATUS.OPEN})
-        .sort((a,b) => {return !a.dateDue? 1 : a.dateDue - b.dateDue});
+        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1 : a.dateDue - b.dateDue});
     },
     inProgressTodos: function() {
       // order by due date (earliest due on top)
       return this.todos
         .filter(todo => {return todo.status === STATUS.PROGRESS})
-        .sort((a,b) => {return !a.dateDue? 1 : a.dateDue - b.dateDue});
+        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1  : a.dateDue - b.dateDue});
     },
     completedTodos: function() {
       // order by date completed (latest on top)
