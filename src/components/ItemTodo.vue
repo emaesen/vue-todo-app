@@ -138,20 +138,36 @@
     },
     computed: {
       formattedDueDate: function() {
-        let dateFormat = {
-          //weekday:'short',
-          month:'short',
-          day:'numeric',
-          //year:'numeric'
+        if (this.todo.dateDue){
+          let dateFormat = {
+            //weekday:'short',
+            month:'short',
+            day:'numeric',
+            //year:'numeric'
+          }
+          let dateText = "";
+          let window = 7;
+          let dueInNrDays = Math.ceil((this.todo.dateDue.getTime() - new Date().getTime()) / DAY);
+          if (dueInNrDays < window) {
+            dateText = dueInNrDays===0? "today!"
+            : dueInNrDays===1? "tomorrow"
+            : "in " + dueInNrDays + " days";
+          } else {
+            dateText = this.todo.dateDue.toLocaleDateString('en-US', dateFormat);
+          }
+          return dateText;
         }
-        return this.todo.dateDue && this.todo.dateDue.toLocaleDateString('en-US', dateFormat);
       },
       isPastDue: function() {
-        return this.todo.dateDue && (this.todo.dateDue.getTime()) < (new Date().getTime());
+        return this.todo.dateDue && (this.todo.dateDue.setHours(0,0,0,0)) < (new Date().setHours(0,0,0,0));
+      },
+      isDueToday: function() {
+        const window = DAY;
+        return this.todo.dateDue && ((this.todo.dateDue.setHours(0,0,0,0)) - (new Date().setHours(0,0,0,0))) < window;
       },
       isDueSoon: function() {
-        const window = DAY * 2;
-        return this.todo.dateDue && ((this.todo.dateDue.getTime()) - (new Date().getTime())) < window;
+        const window = DAY * 3;
+        return this.todo.dateDue && ((this.todo.dateDue.setHours(0,0,0,0)) - (new Date().setHours(0,0,0,0))) < window;
       },
       isOpen: function() {
         return !this.isEditing && this.todo.status === this.STATUS.OPEN
@@ -165,6 +181,7 @@
       dueClass: function() {
         return this.isCompleted? 'complete'
           : this.isPastDue? 'pastdue'
+          : this.isDueToday? 'duetoday'
           : this.isDueSoon? 'duesoon'
           : 'notyetdue'
       }
@@ -208,8 +225,11 @@
 .duesoon{
   background-color: #ff6a0020!important;
 }
+.duetoday{
+  background-color: #ff000030!important;
+}
 .pastdue{
-  background-color: #ff000010!important;
+  background-color: #ff000050!important;
 }
 .complete{
   background-color: #415ca710!important;
