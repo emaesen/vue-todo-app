@@ -9,7 +9,7 @@
       class="content"
     >
       <div
-        v-show="todo.dateDue"
+        v-show="todo.dateDue && !isCompleted"
         class="right aligned"
       >
         Due: {{ formattedDueDate }}
@@ -94,13 +94,6 @@
     >
       Complete this task &nbsp; <i class="stop icon"/>
     </div>
-    <div
-      v-show="isCompleted"
-      class="ui disabled bottom attached green basic button"
-      disabled
-    >
-      Completed
-    </div>
   </div>
 </template>
 
@@ -151,6 +144,8 @@
           if (dueInNrDays < window) {
             dateText = dueInNrDays===0? "today!"
             : dueInNrDays===1? "tomorrow"
+            : dueInNrDays===-1? "yesterday!!"
+            : dueInNrDays<-1? -dueInNrDays + " days ago!!!"
             : "in " + dueInNrDays + " days";
           } else {
             dateText = this.todo.dateDue.toLocaleDateString('en-US', dateFormat);
@@ -219,6 +214,9 @@
 </script>
 
 <style>
+.card{
+  box-shadow: 4px 4px 2px 0 #D4D4D5, 0 0 0 1px #D4D4D5!important;
+}
 .notyetdue{
   background-color: #2bff0410!important;
 }
