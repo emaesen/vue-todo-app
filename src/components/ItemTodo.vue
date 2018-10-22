@@ -9,15 +9,19 @@
       class="content"
     >
       <div
-        v-show="todo.dateDue && !isCompleted"
+        v-if="todo.dateDue && !isCompleted"
         class="right aligned"
       >
         Due: {{ formattedDueDate }}
       </div>
+      <div
+        v-else>
+        &nbsp;
+      </div>
       <div class="header">
         <span class="meta">{{ index+1 }}.</span> {{ todo.title }}
       </div>
-      <div class="content">
+      <div>
         {{ todo.project }}
       </div>
       <div class="meta">
@@ -216,6 +220,13 @@
 <style>
 .card{
   box-shadow: 4px 4px 2px 0 #D4D4D5, 0 0 0 1px #D4D4D5!important;
+}
+.content{
+  padding:.4em .7em!important;
+}
+.meta{
+  margin-top: .4em;
+  font-size:.75em!important;
 }
 .notyetdue{
   background-color: #2bff0410!important;
