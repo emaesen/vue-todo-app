@@ -9,10 +9,10 @@
       class="content"
     >
       <div
-        v-if="todo.dateDue && !isCompleted"
+        v-if="dueDateText && !isCompleted"
         class="right aligned"
       >
-        Due: {{ formattedDueDate }}
+        Due: {{ dueDateText }}
       </div>
       <div
         v-else>
@@ -50,41 +50,6 @@
       </div>
     </div>
     <div
-      v-show="isEditing"
-      class="content"
-    >
-      <div class="ui form">
-        <div class="field">
-          <label>Title</label>
-          <input
-            v-model="todo.title"
-            type="text"
-          >
-        </div>
-        <div class="field">
-          <label>Project</label>
-          <input
-            v-model="todo.project"
-            type="text"
-          >
-        </div>
-        <div class="ui two button attached buttons">
-          <button
-            class="ui basic blue button"
-            @click="saveEdit()"
-          >
-            Save
-          </button>
-          <button
-            class="ui basic red button"
-            @click="cancelEdit()"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-    <div
       v-show="isOpen"
       class="ui bottom attached blue basic button"
       @click="progressTodo(todo)"
@@ -98,15 +63,26 @@
     >
       Complete this task &nbsp; <i class="stop icon"/>
     </div>
+    <edit-todo
+      v-show="isEditing"
+      :todo="todo"
+      @edit-todo="editTodo"
+      @cancel-edit="cancelEdit"
+      @edit-todo-warning="editTodoWarning"
+    />
   </div>
 </template>
 
 <script type="text/javascript">
   import app from '../App';
+  import EditTodo from './CreateEditTodo';
 
   const DAY = 1000 * 60 * 60 * 24;
 
   export default {
+    components: {
+      EditTodo
+    },
     props: {
       index: {
         type: Number,
@@ -134,17 +110,20 @@
       };
     },
     computed: {
-      formattedDueDate: function() {
-        if (this.todo.dateDue){
+      dueDateObj: function() {
+        return this.todo.dateDue? new Date(this.todo.dateDue + "T00:00:00") : null;
+      },
+      dueDateText: function() {
+        let dateText = "";
+        if (this.dueDateObj && !Number.isNaN(this.dueDateObj.getTime())){
           let dateFormat = {
             //weekday:'short',
             month:'short',
             day:'numeric',
             //year:'numeric'
           }
-          let dateText = "";
           let window = 7;
-          let dueInNrDays = Math.ceil((this.todo.dateDue.getTime() - new Date().getTime()) / DAY);
+          let dueInNrDays = Math.ceil((this.dueDateObj.getTime() - new Date().getTime()) / DAY);
           if (dueInNrDays < window) {
             dateText = dueInNrDays===0? "today!"
             : dueInNrDays===1? "tomorrow"
@@ -152,21 +131,21 @@
             : dueInNrDays<-1? -dueInNrDays + " days ago!!!"
             : "in " + dueInNrDays + " days";
           } else {
-            dateText = this.todo.dateDue.toLocaleDateString('en-US', dateFormat);
+            dateText = this.dueDateObj.toLocaleDateString('en-US', dateFormat);
           }
-          return dateText;
         }
+        return dateText;
       },
       isPastDue: function() {
-        return this.todo.dateDue && (this.todo.dateDue.setHours(0,0,0,0)) < (new Date().setHours(0,0,0,0));
+        return this.dueDateObj && (this.dueDateObj.setHours(0,0,0,0)) < (new Date().setHours(0,0,0,0));
       },
       isDueToday: function() {
         const window = DAY;
-        return this.todo.dateDue && ((this.todo.dateDue.setHours(0,0,0,0)) - (new Date().setHours(0,0,0,0))) < window;
+        return this.dueDateObj && ((this.dueDateObj.setHours(0,0,0,0)) - (new Date().setHours(0,0,0,0))) < window;
       },
       isDueSoon: function() {
         const window = DAY * 3;
-        return this.todo.dateDue && ((this.todo.dateDue.setHours(0,0,0,0)) - (new Date().setHours(0,0,0,0))) < window;
+        return this.dueDateObj && ((this.dueDateObj.setHours(0,0,0,0)) - (new Date().setHours(0,0,0,0))) < window;
       },
       isOpen: function() {
         return !this.isEditing && this.todo.status === this.STATUS.OPEN
@@ -199,12 +178,9 @@
         this.isEditing = true;
         this.origTodo = Object.assign({}, this.todo);
       },
-      saveEdit() {
+      editTodo(mod) {
         this.isEditing = false;
-        if (this.todo.title !== this.origTodo.title
-            || this.todo.project !== this.origTodo.project) {
-          this.$emit('edit-todo', this.todo);
-        }
+        this.$emit('edit-todo', {todo:this.todo, mod:mod});
       },
       cancelEdit() {
         this.todo.title = this.origTodo.title;
@@ -212,6 +188,9 @@
         this.todo.note = this.origTodo.note;
         this.todo.dateDue = this.origTodo.dateDue;
         this.isEditing = false;
+      },
+      editTodoWarning(warning) {
+        this.$emit('edit-todo-warning', warning);
       }
     }
   };

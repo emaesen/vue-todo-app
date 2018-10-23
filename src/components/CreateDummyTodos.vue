@@ -41,8 +41,8 @@ export default {
           dateCreated: Date.now()+i*100,
           title: 'Todo title ' + cntr,
           project: 'Short project description ' + cntr,
-          note: 'A note or comment ' + cntr + ' (' + due.toISOString() + ')',
-          dateDue: due
+          note: 'A note or comment ' + cntr + ' (' + due.toISOString().substring(5,10) + ')',
+          dateDue: due.toISOString().substring(0,10)
         });
       }
     },

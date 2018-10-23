@@ -42,7 +42,7 @@ import swalModal from 'sweetalert';
 import ListOpenTodos from './components/ListOpenTodos';
 import ListInProgressTodos from './components/ListInProgressTodos';
 import ListCompletedTodos from './components/ListCompletedTodos';
-import CreateTodo from './components/CreateTodo';
+import CreateTodo from './components/CreateEditTodo';
 import CreateDummyTodos from './components/CreateDummyTodos';
 const STATUS = {
   OPEN: "open",
@@ -53,6 +53,11 @@ const STATUS = {
 let config = {
   showSuccessModal: false,
   showConfirmModal: true
+};
+
+function dateObj(dateStr) {
+  // convert yyyy-MM-dd string to date object
+  return dateStr? new Date(dateStr + "T00:00:00") : null;
 }
 
 export default {
@@ -77,13 +82,13 @@ export default {
       // order by due date (earliest due on top)
       return this.todos
         .filter(todo => {return todo.status === STATUS.OPEN})
-        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1 : a.dateDue - b.dateDue});
+        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1 : dateObj(a.dateDue) - dateObj(b.dateDue)});
     },
     inProgressTodos: function() {
       // order by due date (earliest due on top)
       return this.todos
         .filter(todo => {return todo.status === STATUS.PROGRESS})
-        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1  : a.dateDue - b.dateDue});
+        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1  : dateObj(a.dateDue) - dateObj(b.dateDue)});
     },
     completedTodos: function() {
       // order by date completed (latest on top)
@@ -139,12 +144,21 @@ export default {
         }
       });
     },
-    editTodo(todo) {
+    editTodo(obj) {
+      let todo = obj.todo;
+      const mod = obj.mod;
+      todo.title = mod.title;
+      todo.project = mod.project;
+      todo.note = mod.note;
+      todo.dateDue = mod.dateDue;
       if (config.showSuccessModal) {
         swalModal('Success!', 'To-Do "' + todo.title + '"  has been edited', 'success')
       }
     },
     createTodoWarning(warning) {
+      swalModal(warning.title, warning.text, 'warning');
+    },
+    editTodoWarning(warning) {
       swalModal(warning.title, warning.text, 'warning');
     }
   }

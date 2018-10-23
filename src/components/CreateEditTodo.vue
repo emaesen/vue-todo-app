@@ -1,14 +1,14 @@
 <template>
   <div class="ui basic content center aligned segment">
     <button
-      v-show="!isCreating"
+      v-show="!showForm && !isEdit"
       class="ui basic button icon"
       @click="openTodoForm"
     >
       <i class="plus icon"/> Add a task
     </button>
     <div
-      v-show="isCreating"
+      v-show="showForm"
       class="ui centered card"
     >
       <div class="content">
@@ -44,9 +44,9 @@
           <div class="ui two button attached buttons">
             <button
               class="ui basic blue button"
-              @click="createTodo()"
+              @click="createEditTodo()"
             >
-              Create
+              {{ createEditButtonText }}
             </button>
             <button
               class="ui basic red button"
@@ -63,46 +63,86 @@
 
 <script>
 export default {
+  props: {
+    todo: {
+      type: Object,
+      default: function() {
+        return {}
+      }
+    }
+  },
   data() {
     return {
-      title: '',
-      project: '',
-      note: '',
-      dateDue: '',
-      isCreating: false,
+      title: this.todo && this.todo.title || '',
+      project: this.todo && this.todo.project || '',
+      note: this.todo && this.todo.note || '',
+      dateDue: this.todo && this.todo.dateDue || '',
+      showForm: !!(this.todo && this.todo.title)
     };
+  },
+  computed: {
+    formattedDate: {
+      get: function(){
+        return this.dateDue;
+      },
+      set: function(to){
+        this.dueDate = to;
+      }
+    },
+    isEdit: function(){
+      return !!(this.todo && this.todo.title);
+    },
+    createEditButtonText: function(){
+      return this.isEdit? "Edit" : "Create";
+    }
   },
   methods: {
     openTodoForm() {
-      this.isCreating = true;
+      this.showForm = true;
     },
     cancelTodo() {
-      this.isCreating = false;
-      this.clearTodoForm();
+      if (this.isEdit) {
+        this.$emit('cancel-edit');
+      }
+      this.closeTodoForm();
+    },
+    closeTodoForm() {
+      if (this.isEdit) {
+        this.resetTodoForm();
+      } else {
+        this.clearTodoForm();
+      }
+    },
+    resetTodoForm() {
+      this.title = this.todo.title;
+      this.project = this.todo.project;
+      this.note = this.todo.note;
+      this.dateDue = this.todo.dateDue;
     },
     clearTodoForm() {
       this.title = '';
       this.project = '';
       this.note = '';
       this.dateDue = '';
-      this.isCreating = false;
+      this.showForm = false;
     },
-    createTodo() {
+    createEditTodo() {
+      const msgType = this.isEdit? 'edit-todo' : 'create-todo';
       if (this.title.length > 0 && this.project.length > 0) {
-        this.$emit('create-todo', {
+        this.$emit(msgType, {
           dateCreated: Date.now(),
           title: this.title,
           project: this.project,
           note: this.note,
-          dateDue: this.dateDue? new Date(this.dateDue + "T00:00:00") : '',
+          dateDue: this.dateDue,
           done: false,
         });
-        this.clearTodoForm();
+        this.closeTodoForm();
       } else {
         let txt = (this.title.length === 0)? "Please provide a title." : "";
         txt += (this.title.length === 0 && this.project.length === 0)? "\n" : "";
         txt += this.project.length === 0? "Please provide a project description." : "";
-        this.$emit('create-todo-warning', {
+        this.$emit(msgType + '-warning', {
           title: 'Missing input',
           text: txt
         });
