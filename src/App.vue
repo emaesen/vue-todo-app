@@ -44,11 +44,16 @@ import ListInProgressTodos from './components/ListInProgressTodos';
 import ListCompletedTodos from './components/ListCompletedTodos';
 import CreateTodo from './components/CreateEditTodo';
 import CreateDummyTodos from './components/CreateDummyTodos';
+import storage from './storage.js';
 const STATUS = {
   OPEN: "open",
   PROGRESS: "progress",
   COMPLETE: "complete"
 };
+const STORAGEKEY = "todos";
+const STORAGETYPE = "local"
+
+
 // although this config is a constant within the current implementation, it's defined as a variable so it can be used as such later.
 let config = {
   showSuccessModal: false,
@@ -74,7 +79,7 @@ export default {
   },
   data() {
     return {
-      todos: []
+      todos: storage.getItem(STORAGEKEY, STORAGETYPE) || []
     };
   },
   computed: {
@@ -104,12 +109,14 @@ export default {
       if (config.showSuccessModal) {
         swalModal('Success!', 'To-Do ' + todo.title + ' has been created', 'success');
       }
+      storage.setItem(STORAGEKEY, this.todos, STORAGETYPE);
     },
     progressTodo(todo) {
       todo.status = STATUS.PROGRESS;
       if (config.showSuccessModal) {
         swalModal('Success!', 'To-Do ' + todo.title + ' is now in progress', 'success');
       }
+      storage.setItem(STORAGEKEY, this.todos, STORAGETYPE);
     },
     deleteTodo(todo) {
       swalModal({
@@ -125,6 +132,7 @@ export default {
           if (config.showSuccessModal) {
             swalModal('Deleted!', 'Your To-Do "' + todo.title + '" has been deleted', 'success');
           }
+          storage.setItem(STORAGEKEY, this.todos, STORAGETYPE);
         } else {
           //swalModal('Your To-Do has been restored.')
         }
@@ -141,6 +149,7 @@ export default {
           if (config.showSuccessModal) {
             swalModal('Success!', 'To-Do "' + todo.title + '"  has been completed', 'success')
           }
+          storage.setItem(STORAGEKEY, this.todos, STORAGETYPE);
         }
       });
     },
@@ -154,6 +163,7 @@ export default {
       if (config.showSuccessModal) {
         swalModal('Success!', 'To-Do "' + todo.title + '"  has been edited', 'success')
       }
+      storage.setItem(STORAGEKEY, this.todos, STORAGETYPE);
     },
     createTodoWarning(warning) {
       swalModal(warning.title, warning.text, 'warning');

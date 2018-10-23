@@ -2,13 +2,17 @@
 
 This is a basic one-page ToDo demo app, written with [vue.js v2](https://vuejs.org/) (for app logic), [semantic-ui](https://semantic-ui.com) (for styling) and [sweetAlert](https://sweetalert.js.org/) (for modal windows).
 
-This is a demo: it allows ToDo cards to be created, edited, moved from one status to another, and deleted. It doesn't store any entered data. Everything you enter will be lost upon reload...
+This is a demo: it allows ToDo cards to be created, edited, moved from one status to another, and deleted.
 
-v0.1: The page contains two columns: one for Open Tasks and one for Completed Tasks. ToDo items have a title and project description.
+v0.1: The page contains two columns: one for Open Tasks and one for Completed Tasks. ToDo items have a title and project description. There's no permanent storage: everything entered is lost upon reload...
 
 V0.2: Refactored and added new status and column for In Progress Tasks
 
 v0.3: Added note and due date to ToDo item, with visual clues when items are almost due or past due.
+
+v0.4: Added simple storage implementation to persist ToDo list in the browser's localStorage. Upon page reload the ToDo list is repopulated from storage.
+
+
 
 
 ## Build Setup
