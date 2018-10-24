@@ -25,14 +25,14 @@
             <textarea
               v-model="project"
               rows="2"
-            ></textarea>
+            />
           </div>
           <div class="field">
             <label>Note / Comment</label>
             <textarea
               v-model="note"
               rows="4"
-            ></textarea>
+            />
           </div>
           <div class="field">
             <label>Date Due</label>
