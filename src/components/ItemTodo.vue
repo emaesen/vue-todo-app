@@ -197,29 +197,40 @@
 </script>
 
 <style>
-.card{
-  box-shadow: 4px 4px 2px 0 #D4D4D5, 0 0 0 1px #D4D4D5!important;
+.ui.card{
+  box-shadow: 4px 4px 2px 0 #D4D4D5, 0 0 0 1px #D4D4D5;
 }
-.content{
-  padding:.4em .7em!important;
+.ui.card>.content{
+  padding:.4em .7em;
 }
-.meta{
+h2 .meta{
+  font-size:.75em;
+  color:#00000063;
+}
+.ui.card .header .meta{
+  color:#00000063;
+}
+.ui.card .meta{
+  font-size:.85em;
+  line-height: normal;
   margin-top: .4em;
-  font-size:.75em!important;
+  margin-bottom: .7em;
+  color:#000000bf;
+  font-style: italic;
 }
-.notyetdue{
-  background-color: #2bff0410!important;
+.ui.card.notyetdue{
+  background-color: #2bff0410;
 }
-.duesoon{
-  background-color: #ff6a0020!important;
+.ui.card.duesoon{
+  background-color: #ff6a0020;
 }
-.duetoday{
-  background-color: #ff000030!important;
+.ui.card.duetoday{
+  background-color: #ff000030;
 }
-.pastdue{
-  background-color: #ff000050!important;
+.ui.card.pastdue{
+  background-color: #ff000050;
 }
-.complete{
-  background-color: #415ca710!important;
+.ui.card.complete{
+  background-color: #415ca710;
 }
 </style>

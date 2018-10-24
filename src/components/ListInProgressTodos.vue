@@ -1,6 +1,9 @@
 <template>
   <div>
-    <p class="tasks">Tasks In Progress: {{ todos.length }}</p>
+    <h2 class="tasks">
+      Tasks In Progress
+      <span class="meta">({{ todos.length }})</span>
+    </h2>
     <item-todo
       v-for="(todo, index) in todos"
       :todo.sync="todo"

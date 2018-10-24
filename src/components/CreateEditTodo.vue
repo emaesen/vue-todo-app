@@ -22,17 +22,17 @@
           </div>
           <div class="field">
             <label>Project Description</label>
-            <input
+            <textarea
               v-model="project"
-              type="text"
-            >
+              rows="2"
+            ></textarea>
           </div>
           <div class="field">
             <label>Note / Comment</label>
-            <input
+            <textarea
               v-model="note"
-              type="text"
-            >
+              rows="4"
+            ></textarea>
           </div>
           <div class="field">
             <label>Date Due</label>

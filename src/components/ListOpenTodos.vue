@@ -1,6 +1,9 @@
 <template>
   <div>
-    <p class="tasks">Open Tasks: {{ todos.length }}</p>
+    <h2 class="tasks">
+      Open Tasks
+      <span class="meta">({{ todos.length }})</span>
+    </h2>
     <item-todo
       v-for="(todo, index) in todos"
       :todo.sync="todo"
@@ -50,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-p.tasks {
+h2.tasks {
   text-align: center;
 }
 </style>
