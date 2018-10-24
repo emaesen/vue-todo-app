@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style scoped>
-p.tasks {
+h2.tasks {
   text-align: center;
 }
 </style>
