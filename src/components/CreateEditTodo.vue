@@ -24,14 +24,12 @@
             <label>Project Description</label>
             <textarea
               v-model="project"
-              rows="2"
             />
           </div>
           <div class="field">
             <label>Note / Comment</label>
             <textarea
               v-model="note"
-              rows="4"
             />
           </div>
           <div class="field">
@@ -151,3 +149,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.ui.form textarea:not([rows]){
+  min-height:4em;
+  height:8em;
+}
+</style>

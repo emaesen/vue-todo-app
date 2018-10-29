@@ -37,12 +37,15 @@
       <div
         v-show="!isCollapsed"
       >
-        <div>
-          {{ todo.project }}
-        </div>
-        <div class="meta">
-          {{ todo.note }}
-        </div>
+        <div
+          class="_project"
+          v-html="projectAsHtml"
+        />
+        <div
+          v-if="todo.note"
+          class="meta _note"
+          v-html="noteAsHtml"
+        />
         <div class="right floated extra content ui mini basic icon buttons">
           <span
             v-show="!isCompleted"
@@ -98,6 +101,13 @@
   import app from '../App';
   import EditTodo from './CreateEditTodo';
 
+  function simpleFormat(inp){
+    return inp
+      .replace(/</g, "&lt;")
+      .replace(/(http.+\b)/g, '<a href="$1" target="_blank">$1</a>')
+      .replace(/\n/g, "<br>");
+  }
+
   const DAY = 1000 * 60 * 60 * 24;
 
   export default {
@@ -136,6 +146,12 @@
       };
     },
     computed: {
+      projectAsHtml: function() {
+        return simpleFormat(this.todo.project);
+      },
+      noteAsHtml: function() {
+        return simpleFormat(this.todo.note);
+      },
       dueDateObj: function() {
         return this.todo.dateDue? new Date(this.todo.dateDue + "T00:00:00") : null;
       },
@@ -242,8 +258,6 @@ h2 .meta{
 .ui.card .meta{
   font-size:.85em;
   line-height: normal;
-  margin-top: .4em;
-  margin-bottom: .7em;
   color:#000000bf;
   font-style: italic;
 }
@@ -280,5 +294,12 @@ h2 .meta{
   display:inline-block;
   width:75%;
   font-size:1.1rem;
+}
+._project,
+._note{
+  margin-top: .5em;
+  padding-top: 1em;
+  margin-bottom: .5em;
+  border-top: 1px dotted #ccc;
 }
 </style>
