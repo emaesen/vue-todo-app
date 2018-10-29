@@ -10,58 +10,79 @@
     >
       <div
         v-if="dueDateText && !isCompleted"
-        class="right aligned"
+        class="_due"
       >
         Due: {{ dueDateText }}
       </div>
       <div
-        v-else>
-        &nbsp;
+        v-else
+        class="_spacer"
+      />
+      <div class="header _titlewrapper">
+        <div class="_titlemeta">
+          <i
+            v-if="isCollapsed"
+            class="caret right icon"
+            @click="toggleCollapse()"
+          />
+          <i
+            v-else
+            class="caret down icon"
+            @click="toggleCollapse()"
+          />
+          <span class="meta">{{ index+1 }}.</span>
+        </div>
+        <div class="_title">{{ todo.title }}</div>
       </div>
-      <div class="header">
-        <span class="meta">{{ index+1 }}.</span> {{ todo.title }}
-      </div>
-      <div>
-        {{ todo.project }}
-      </div>
-      <div class="meta">
-        {{ todo.note }}
-      </div>
-      <div class="right floated extra content ui mini basic icon buttons">
-        <span
-          v-show="!isCompleted"
-          class="edit ui primary basic icon button"
-          title="edit"
-          @click="showForm()"
-        >
-          <i class="edit icon"/> edit
-        </span>
-        <span
-          v-show="!isCompleted"
-          class="or"
-        />
-        <span
-          class="trash ui negative basic icon button"
-          title="delete"
-          @click="deleteTodo(todo)"
-        >
-          <i class="trash outline icon"/> delete
-        </span>
+      <div
+        v-show="!isCollapsed"
+      >
+        <div>
+          {{ todo.project }}
+        </div>
+        <div class="meta">
+          {{ todo.note }}
+        </div>
+        <div class="right floated extra content ui mini basic icon buttons">
+          <span
+            v-show="!isCompleted"
+            class="edit ui primary basic icon button"
+            title="edit"
+            @click="showForm()"
+          >
+            <i class="edit icon"/> edit
+          </span>
+          <span
+            v-show="!isCompleted"
+            class="or"
+          />
+          <span
+            class="trash ui negative basic icon button"
+            title="delete"
+            @click="deleteTodo(todo)"
+          >
+            <i class="trash outline icon"/> delete
+          </span>
+        </div>
       </div>
     </div>
     <div
-      v-show="isOpen"
-      class="ui bottom attached blue basic button"
-      @click="progressTodo(todo)"
+      v-show="!isCollapsed"
     >
-      Start this task &nbsp; <i class="play icon"/>
-    </div>
-    <div
-      v-show="isInProgress"
-      class="ui bottom attached blue basic button"
-      @click="completeTodo(todo)"
-    >
-      Complete this task &nbsp; <i class="stop icon"/>
+      <div
+        v-show="isOpen"
+        class="ui bottom attached blue basic button"
+        @click="progressTodo(todo)"
+      >
+        Start this task &nbsp; <i class="play icon"/>
+      </div>
+      <div
+        v-show="isInProgress"
+        class="ui bottom attached blue basic button"
+        @click="completeTodo(todo)"
+      >
+        Complete this task &nbsp; <i class="stop icon"/>
+      </div>
     </div>
     <edit-todo
       v-show="isEditing"
@@ -106,6 +127,7 @@
     data() {
       return {
         isEditing: false,
+        isCollapsed: true,
         STATUS: app.constants.STATUS
       };
     },
@@ -165,6 +187,9 @@
       }
     },
     methods: {
+      toggleCollapse() {
+        this.isCollapsed = !this.isCollapsed;
+      },
       progressTodo(todo) {
         this.$emit('progress-todo', todo);
       },
@@ -198,7 +223,7 @@
 
 <style>
 .ui.card{
-  box-shadow: 4px 4px 2px 0 #D4D4D5, 0 0 0 1px #D4D4D5;
+  margin:.5em 0;
 }
 .ui.card>.content{
   padding:.4em .7em;
@@ -232,5 +257,23 @@ h2 .meta{
 }
 .ui.card.complete{
   background-color: #415ca710;
+}
+._spacer{
+  height:.4em;
+}
+._due{
+  text-align: right;
+  position: relative;
+  top:-.4em;
+}
+._titlewrapper{
+}
+._titlemeta{
+  display:inline-block;
+  vertical-align: top;
+}
+._title{
+  display:inline-block;
+  width:75%
 }
 </style>

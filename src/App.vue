@@ -64,7 +64,14 @@ function dateObj(dateStr) {
   // convert yyyy-MM-dd string to date object
   return dateStr? new Date(dateStr + "T00:00:00") : null;
 }
-
+function sortByDateDue(a,b) {
+  return !a.dateDue? 1
+    : !b.dateDue? -1
+    : dateObj(a.dateDue) - dateObj(b.dateDue);
+}
+function sortByDateCreated(a,b) {
+  return b.dateCreated - a.dateCreated;
+}
 export default {
   name: 'App',
   components: {
@@ -87,13 +94,15 @@ export default {
       // order by due date (earliest due on top)
       return this.todos
         .filter(todo => {return todo.status === STATUS.OPEN})
-        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1 : dateObj(a.dateDue) - dateObj(b.dateDue)});
+        .sort((a,b) => {return sortByDateCreated(a,b)})
+        .sort((a,b) => {return sortByDateDue(a,b)});
     },
     inProgressTodos: function() {
       // order by due date (earliest due on top)
       return this.todos
         .filter(todo => {return todo.status === STATUS.PROGRESS})
-        .sort((a,b) => {return !a.dateDue? 1 : !b.dateDue? -1  : dateObj(a.dateDue) - dateObj(b.dateDue)});
+        .sort((a,b) => {return sortByDateCreated(a,b)})
+        .sort((a,b) => {return sortByDateDue(a,b)});
     },
     completedTodos: function() {
       // order by date completed (latest on top)
@@ -176,7 +185,27 @@ export default {
 </script>
 
 <style>
+#app{
+  padding:1em;
+}
+body{
+  font-size:13px;
+}
+h2.tasks {
+  text-align: center;
+  font-size:1.5rem;
+}
+i.icon.caret{
+  margin: 0;
+}
+.ui.form input,
+.ui.form textarea{
+  padding: .3em!important;
+}
 .swal-modal {
   animation: unset!important;
+}
+._titlewrapper{
+  margin:0 -.6em;
 }
 </style>

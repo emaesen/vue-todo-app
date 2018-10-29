@@ -51,9 +51,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-h2.tasks {
-  text-align: center;
-}
-</style>
