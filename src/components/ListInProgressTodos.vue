@@ -9,6 +9,7 @@
       :todo.sync="todo"
       :index.sync="index"
       :key="todo.dateCreated"
+      :init-collapsed="false"
       @delete-todo="deleteTodo"
       @complete-todo="completeTodo"
       @edit-todo="editTodo"

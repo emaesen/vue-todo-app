@@ -122,12 +122,16 @@
             status:""
           }
         }
+      },
+      initCollapsed: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
       return {
         isEditing: false,
-        isCollapsed: true,
+        isCollapsed: !!this.initCollapsed && true,
         STATUS: app.constants.STATUS
       };
     },
@@ -274,6 +278,7 @@ h2 .meta{
 }
 ._title{
   display:inline-block;
-  width:75%
+  width:75%;
+  font-size:1.1rem;
 }
 </style>
