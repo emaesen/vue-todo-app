@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1 class="ui dividing centered header">
-      Todo App
+      ToDo Tasks Activity Board
     </h1>
     <create-todo
       @create-todo="createTodo"
