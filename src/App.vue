@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1 class="ui dividing centered header">
-      Vue.js Todo App
+      Todo App
     </h1>
     <create-todo
       @create-todo="createTodo"
