@@ -104,6 +104,7 @@
   function simpleFormat(inp){
     return inp
       .replace(/</g, "&lt;")
+      .replace(/\* /g, "⊛ ")
       .replace(/(http.+\b)/g, '<a href="$1" target="_blank">$1</a>')
       .replace(/\n/g, "<br>");
   }
