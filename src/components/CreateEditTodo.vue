@@ -14,14 +14,14 @@
       <div class="content">
         <div class="ui form">
           <div class="field">
-            <label>Title</label>
+            <label>Title *</label>
             <input
               v-model="title"
               type="text"
             >
           </div>
           <div class="field">
-            <label>Project Description</label>
+            <label>Project Description *</label>
             <textarea
               v-model="project"
             />
