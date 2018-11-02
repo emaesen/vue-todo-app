@@ -277,6 +277,9 @@ h2 .meta{
 .ui.card.complete{
   background-color: #415ca710;
 }
+.caret{
+  cursor: pointer;
+}
 ._spacer{
   height:.4em;
 }
