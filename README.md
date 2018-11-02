@@ -1,6 +1,6 @@
 # Vue.js Todo App
 
-This is a basic one-page ToDo demo app, written with [vue.js v2](https://vuejs.org/) (for app logic), [semantic-ui](https://semantic-ui.com) (for styling) and [sweetAlert](https://sweetalert.js.org/) (for modal windows).
+This is a basic one-page ToDo demo app, written with [vue.js v2](https://vuejs.org/) (for app logic), [semantic-ui](https://semantic-ui.com) (for styling) and [sweetAlert](https://sweetalert.js.org/) (for modal windows - primarily in versions 0.1 to 0.4).
 
 This is a demo: it allows ToDo cards to be created, edited, moved from one status to another, and deleted.
 
@@ -12,7 +12,7 @@ v0.3: Added note and due date to ToDo item, with visual clues when items are alm
 
 v0.4: Added simple storage implementation to persist ToDo list in the browser's localStorage. Upon page reload the ToDo list is repopulated from storage.
 
-
+v0.5: Replaced modal confirmation alerts with basic 1-step undo/redo functionality.
 
 
 ## Build Setup
