@@ -1,4 +1,4 @@
-# Vue.js Todo App
+# Vue.js ToDo App
 
 This is a basic one-page ToDo app, written with [vue.js v2](https://vuejs.org/) (for app logic), [semantic-ui](https://semantic-ui.com) (for styling) and [sweetAlert](https://sweetalert.js.org/) (for modal windows - primarily in versions 0.1 to 0.4).
 
@@ -28,3 +28,8 @@ npm run dev
 # or alternatively run
 npm start
 ```
+
+
+## Screen capture
+
+![screen capture of ToDo App](./screencapture-todo-app.jpg)
