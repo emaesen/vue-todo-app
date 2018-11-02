@@ -3,6 +3,21 @@
     <h1 class="ui dividing centered header">
       ToDo Tasks Activity Board
     </h1>
+    <div
+      v-show="showUndo"
+      class="_undo"
+      @click="toggleUndo()"
+    >
+      {{ undoText }}
+      <span
+        v-if="showUndoIcon"
+        class="undo _icon"
+      >&#8630;</span>
+      <span
+        v-else
+        class="redo _icon"
+      >&#8631;</span>
+    </div>
     <create-todo
       @create-todo="createTodo"
       @create-todo-warning="createTodoWarning"
@@ -52,12 +67,7 @@ const STATUS = {
 };
 const STORAGEKEY = "todos";
 storage.setType("local");
-
-// although this config is a constant within the current implementation, it's defined as a variable so it can be used as such later.
-let config = {
-  showSuccessModal: false,
-  showConfirmModal: true
-};
+storage.enableUndo();
 
 function dateObj(dateStr) {
   // convert yyyy-MM-dd string to date object
@@ -85,7 +95,10 @@ export default {
   },
   data() {
     return {
-      todos: storage.getItem(STORAGEKEY) || []
+      todos: this.getFromStore() || [],
+      showUndo: false,
+      showUndoIcon: true,
+      undoAction: ""
     };
   },
   computed: {
@@ -108,58 +121,42 @@ export default {
       return this.todos
         .filter(todo => {return todo.status === STATUS.COMPLETE})
         .sort((a,b) => {return b.dateCompleted - a.dateCompleted});
+    },
+    undoText: function() {
+      return (this.showUndoIcon? "Undo" : "Redo") + " 'task " + this.undoAction + "' ";
     }
   },
   methods: {
+    setInStore(value, action){
+      storage.setItem(STORAGEKEY, value);
+      this.undoAction = action;
+      this.showUndo = this.showUndoIcon = true;
+    },
+    getFromStore(){
+      return storage.getItem(STORAGEKEY);
+    },
+    toggleUndo(){
+      this.todos = storage.undoItem(STORAGEKEY);
+      this.showUndoIcon = !this.showUndoIcon;
+    },
     createTodo(todo) {
       todo.status = STATUS.OPEN;
       this.todos.push(todo);
-      if (config.showSuccessModal) {
-        swalModal('Success!', 'To-Do ' + todo.title + ' has been created', 'success');
-      }
-      storage.setItem(STORAGEKEY, this.todos);
+      this.setInStore(this.todos, "create");
     },
     progressTodo(todo) {
       todo.status = STATUS.PROGRESS;
-      if (config.showSuccessModal) {
-        swalModal('Success!', 'To-Do ' + todo.title + ' is now in progress', 'success');
-      }
-      storage.setItem(STORAGEKEY, this.todos);
+      this.setInStore(this.todos, "progress");
     },
     deleteTodo(todo) {
-      swalModal({
-        title: 'Are you sure?',
-        text: 'To-Do "' + todo.title + '" will be permanently deleted!',
-        icon: 'warning',
-        buttons: true
-      })
-      .then((doDelete) => {
-        if (doDelete) {
-          const todoIndex = this.todos.indexOf(todo);
-          this.todos.splice(todoIndex, 1);
-          if (config.showSuccessModal) {
-            swalModal('Deleted!', 'Your To-Do "' + todo.title + '" has been deleted', 'success');
-          }
-          storage.setItem(STORAGEKEY, this.todos);
-        } else {
-          //swalModal('Your To-Do has been restored.')
-        }
-      });
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos.splice(todoIndex, 1);
+      this.setInStore(this.todos, "delete");
     },
     completeTodo(todo) {
-      swalModal('Task Complete?', 'To-Do "' + todo.title + '"  will be marked as completed', 'info', {
-        buttons: {cancel:true, ok:true}
-      })
-      .then((action) => {
-        if (action === "ok") {
-          todo.dateCompleted = Date.now();
-          todo.status = STATUS.COMPLETE;
-          if (config.showSuccessModal) {
-            swalModal('Success!', 'To-Do "' + todo.title + '"  has been completed', 'success')
-          }
-          storage.setItem(STORAGEKEY, this.todos);
-        }
-      });
+      todo.dateCompleted = Date.now();
+      todo.status = STATUS.COMPLETE;
+      this.setInStore(this.todos, "complete");
     },
     editTodo(obj) {
       let todo = obj.todo;
@@ -168,10 +165,7 @@ export default {
       todo.project = mod.project;
       todo.note = mod.note;
       todo.dateDue = mod.dateDue;
-      if (config.showSuccessModal) {
-        swalModal('Success!', 'To-Do "' + todo.title + '"  has been edited', 'success')
-      }
-      storage.setItem(STORAGEKEY, this.todos);
+      this.setInStore(this.todos, "edit");
     },
     createTodoWarning(warning) {
       swalModal(warning.title, warning.text, 'warning');
@@ -206,5 +200,20 @@ i.icon.caret{
 }
 ._titlewrapper{
   margin:0 -.6em;
+}
+._undo{
+  position: fixed;
+  top:1em;
+  right:1em;
+  z-index:99;
+  background-color:#dbecf9cc;
+  padding:.2em .5em;
+  border:1px solid #c5c5c5;
+  border-radius:5px;
+  color:#2185D0;
+  cursor: pointer;
+}
+._icon{
+  font-size: 2em;
 }
 </style>
