@@ -3,7 +3,7 @@
     <hr class="ui">
     <div class="ui">
       Create a few dummy Todos:<br>
-      (for development purposes)
+      (for development/test purposes)
     </div>
     <div class="ui action input">
       <input
