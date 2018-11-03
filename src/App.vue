@@ -8,7 +8,9 @@
       class="_undo"
       @click="toggleUndo()"
     >
-      {{ undoText }}
+      <span class="_undotext">
+        {{ undoText }}
+      </span>
       <span
         v-if="showUndoIcon"
         class="undo _icon"
@@ -212,6 +214,10 @@ i.icon.caret{
   border-radius:5px;
   color:#2185D0;
   cursor: pointer;
+}
+._undotext{
+  position: relative;
+  bottom:.2em;
 }
 ._icon{
   font-size: 2em;
