@@ -3,6 +3,9 @@
     <h1 class="ui dividing centered header">
       ToDo Tasks Activity Board
     </h1>
+    <span class="_today">
+      {{ dateToday }}
+    </span>
     <div
       v-show="showUndo"
       class="_undo"
@@ -126,6 +129,13 @@ export default {
     },
     undoText: function() {
       return (this.showUndoIcon? "Undo" : "Redo") + " 'task " + this.undoAction + "' ";
+    },
+    dateToday: function() {
+      return new Date().toLocaleDateString('en-US', {
+        weekday:'short',
+        month:'short',
+        day:'numeric'
+      });
     }
   },
   methods: {
@@ -202,6 +212,17 @@ i.icon.caret{
 }
 ._titlewrapper{
   margin:0 -.6em;
+}
+._today{
+  position: fixed;
+  top:1em;
+  left:1em;
+  z-index:99;
+  background-color:#f5f6f9e3;
+  padding:.2em .5em;
+  border:1px solid #c5c5c5;
+  border-radius:5px;
+  line-height:1.8em;
 }
 ._undo{
   position: fixed;
