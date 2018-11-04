@@ -70,6 +70,7 @@ const STATUS = {
   PROGRESS: "progress",
   COMPLETE: "complete"
 };
+const UNDODELAYTIME = 60 * 1000;
 const STORAGEKEY = "todos";
 storage.setType("local");
 storage.enableUndo();
@@ -139,10 +140,18 @@ export default {
     }
   },
   methods: {
+    hideUndoOption(){
+      this.showUndo = false;
+    },
+    restartHideUndoTimer(){
+      window.clearTimeout(this.timeoutID);
+      this.timeoutID = window.setTimeout(this.hideUndoOption, UNDODELAYTIME);
+    },
     setInStore(value, action){
       storage.setItem(STORAGEKEY, value);
       this.undoAction = action;
       this.showUndo = this.showUndoIcon = true;
+      this.restartHideUndoTimer();
     },
     getFromStore(){
       return storage.getItem(STORAGEKEY);
@@ -150,6 +159,7 @@ export default {
     toggleUndo(){
       this.todos = storage.undoItem(STORAGEKEY);
       this.showUndoIcon = !this.showUndoIcon;
+      this.restartHideUndoTimer();
     },
     createTodo(todo) {
       todo.status = STATUS.OPEN;
