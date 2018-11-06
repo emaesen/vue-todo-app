@@ -2,6 +2,14 @@
   "name": "vue-todo-demo-app",
   "version": "0.5.0",
   "description": "A Vue.js ToDo app - for local use only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emaesen/vue-todo-app.git"
+  },
+  "keywords": [
+    "javascript",
+    "vue"
+  ],
   "author": "Edward Maesen",
   "license": "MIT",
   "private": true,
