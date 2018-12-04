@@ -288,8 +288,6 @@ h2 .meta{
   position: relative;
   top:-.4em;
 }
-._titlewrapper{
-}
 ._titlemeta{
   display:inline-block;
   vertical-align: top;
